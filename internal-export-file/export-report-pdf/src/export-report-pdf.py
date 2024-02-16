@@ -99,20 +99,23 @@ class ExportReportPdf:
         entity_type = data["entity_type"]
         entity_id = data["entity_id"]
 
+        # Retrieve markings for export push
+        content_max_markings = data["content_max_markings"]
+        file_max_markings = data["file_max_markings"]
         if entity_type == "Report":
-            self._process_report(entity_id, file_name)
+            self._process_report(entity_id, file_name, content_max_markings, file_max_markings)
         elif entity_type == "Case-Incident":
-            self._process_case(entity_id, file_name, entity_type)
+            self._process_case(entity_id, file_name, entity_type, content_max_markings, file_max_markings)
         elif entity_type == "Case-Rfi":
-            self._process_case(entity_id, file_name, entity_type)
+            self._process_case(entity_id, file_name, entity_type,  content_max_markings, file_max_markings)
         elif entity_type == "Case-Rft":
-            self._process_case(entity_id, file_name, entity_type)
+            self._process_case(entity_id, file_name, entity_type,  content_max_markings, file_max_markings)
         elif entity_type == "Intrusion-Set":
-            self._process_intrusion_set(entity_id, file_name)
+            self._process_intrusion_set(entity_id, file_name, content_max_markings, file_max_markings)
         elif entity_type == "Threat-Actor-Group":
-            self._process_threat_actor_group(entity_id, file_name)
+            self._process_threat_actor_group(entity_id, file_name, content_max_markings, file_max_markings)
         elif entity_type == "Threat-Actor-Individual":
-            self._process_threat_actor_individual(entity_id, file_name)
+            self._process_threat_actor_individual(entity_id, file_name, content_max_markings, file_max_markings)
         else:
             raise ValueError(
                 f'This connector currently only handles the entity types: "Report", "Intrusion-Set", "Threat-Actor-Group", "Threat-Actor-Individual", "Case-Incident", "Case-Rfi", "Case-Rft", not "{entity_type}".'
@@ -120,7 +123,7 @@ class ExportReportPdf:
 
         return "Export done"
 
-    def _process_report(self, entity_id, file_name):
+    def _process_report(self, entity_id, file_name, content_max_markings, file_max_markings):
         """
         Process a Report entity and upload as pdf.
         """
@@ -227,10 +230,10 @@ class ExportReportPdf:
         # Upload the output pdf
         self.helper.log_info(f"Uploading: {file_name}")
         self.helper.api.stix_domain_object.push_entity_export(
-            report_id, file_name, pdf_contents, "application/pdf"
+            report_id, file_name, pdf_contents, content_max_markings, file_max_markings, "application/pdf"
         )
 
-    def _process_intrusion_set(self, entity_id, file_name):
+    def _process_intrusion_set(self, entity_id, file_name, content_max_markings, file_max_markings):
         """
         Process an Intrusion Set entity and upload as pdf.
         """
@@ -322,10 +325,10 @@ class ExportReportPdf:
         # Upload the output pdf
         self.helper.log_info(f"Uploading: {file_name}")
         self.helper.api.stix_domain_object.push_entity_export(
-            entity_id, file_name, pdf_contents, "application/pdf"
+            entity_id, file_name, pdf_contents, content_max_markings, file_max_markings, "application/pdf"
         )
 
-    def _process_threat_actor_group(self, entity_id, file_name):
+    def _process_threat_actor_group(self, entity_id, file_name, content_max_markings, file_max_markings):
         """
         Process a Threat Actor Group entity and upload as pdf.
         """
@@ -417,10 +420,10 @@ class ExportReportPdf:
         # Upload the output pdf
         self.helper.log_info(f"Uploading: {file_name}")
         self.helper.api.stix_domain_object.push_entity_export(
-            entity_id, file_name, pdf_contents, "application/pdf"
+            entity_id, file_name, pdf_contents, content_max_markings, file_max_markings, "application/pdf"
         )
 
-    def _process_threat_actor_individual(self, entity_id, file_name):
+    def _process_threat_actor_individual(self, entity_id, file_name, content_max_markings, file_max_markings):
         """
         Process a Threat Actor Individual entity and upload as pdf.
         """
@@ -512,10 +515,10 @@ class ExportReportPdf:
         # Upload the output pdf
         self.helper.log_info(f"Uploading: {file_name}")
         self.helper.api.stix_domain_object.push_entity_export(
-            entity_id, file_name, pdf_contents, "application/pdf"
+            entity_id, file_name, pdf_contents, content_max_markings, file_max_markings, "application/pdf"
         )
 
-    def _process_case(self, entity_id, file_name, entity_type):
+    def _process_case(self, entity_id, file_name, entity_type, content_max_markings, file_max_markings):
         """
         Process a Case container and upload as pdf.
         """
@@ -640,7 +643,7 @@ class ExportReportPdf:
         # Upload the output pdf
         self.helper.log_info(f"Uploading: {file_name}")
         self.helper.api.stix_domain_object.push_entity_export(
-            entity_id, file_name, pdf_contents, "application/pdf"
+            entity_id, file_name, pdf_contents,  content_max_markings, file_max_markings, "application/pdf"
         )
 
     def _set_colors(self):
